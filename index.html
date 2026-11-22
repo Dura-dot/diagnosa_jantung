@@ -1,0 +1,920 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hasil Diagnosa Fuzzy</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Hasil Diagnosa Fuzzy Logic</h1>
+
+        <!-- Data Pasien -->
+        <table>
+            <tr><th>Nama Pasien</th><td class="text-black"><?= htmlspecialchars($pasien['nama']) ?></td></tr>
+            <tr><th>Usia</th><td class="text-black"><?= htmlspecialchars($pasien['usia']) ?></td></tr>
+            <tr><th>Jenis Kelamin</th><td class="text-black"><?= htmlspecialchars($pasien['jenis_kelamin']) ?></td></tr>
+            <tr><th>Heart Rate</th><td class="text-black"><?= $HR ?> bpm</td></tr>
+            <tr><th>P-R Interval</th><td class="text-black"><?= $PR ?> ms</td></tr>
+            <tr><th>QRS Duration</th><td class="text-black"><?= $QRS ?> ms</td></tr>
+            <tr><th>QT Interval</th><td class="text-black"><?= $QT ?> ms</td></tr>
+            <tr><th>QTC Interval</th><td class="text-black"><?= $QTC ?> ms</td></tr>
+            <tr><th>AXIS</th><td class="text-black"><?= $AXIS ?>°</td></tr>
+            <tr><th>RV6</th><td class="text-black"><?= $RV6 ?> mV</td></tr>
+            <tr><th>R+S</th><td class="text-black"><?= $RS ?> mV</td></tr> <!-- Hapus -->
+        </table>
+
+        <!-- Nilai Fuzifikasi -->
+        <div class="debug">
+            <h2>Nilai Fuzifikasi</h2>
+            <table>
+                <tr>
+                    <td>HR</td>
+                    <td>pelan = <?= round($hr_pelan, 3) ?></td>
+                    <td>sedang = <?= round($hr_sedang, 3) ?></td>
+                    <td>cepat = <?= round($hr_cepat, 3) ?></td>
+                </tr>
+                <tr>
+                    <td>PR</td>
+                    <td>rendah = <?= round($pr_rendah, 3) ?></td>
+                    <td>sedang = <?= round($pr_sedang, 3) ?></td>
+                    <td>tinggi = <?= round($pr_tinggi, 3) ?></td>
+                </tr>
+                <tr>
+                    <td>QRS</td>
+                    <td>pelan = <?= round($qrs_pelan, 3) ?></td>
+                    <td>sedang = <?= round($qrs_sedang, 3) ?></td>
+                    <td>cepat = <?= round($qrs_cepat, 3) ?></td>
+                </tr>
+                <tr>
+                    <td>QT</td>
+                    <td>rendah = <?= round($qt_rendah, 3) ?></td>
+                    <td>sedang = <?= round($qt_sedang, 3) ?></td>
+                    <td>tinggi = <?= round($qt_tinggi, 3) ?></td>
+                </tr>
+                <tr>
+                    <td>QTC</td>
+                    <td>pelan = <?= round($qtc_pelan, 3) ?></td>
+                    <td>sedang = <?= round($qtc_sedang, 3) ?></td>
+                    <td>cepat = <?= round($qtc_cepat, 3) ?></td>
+                </tr>
+                <tr>
+                    <td>AXIS</td>
+                    <td>rendah = <?= round($axis_rendah, 3) ?></td>
+                    <td>sedang = <?= round($axis_sedang, 3) ?></td>
+                    <td>tinggi = <?= round($axis_tinggi, 3) ?></td>
+                </tr>
+                <tr>
+                    <td>RV6</td>
+                    <td>pelan = <?= round($rv6_pelan, 3) ?></td>
+                    <td>sedang = <?= round($rv6_sedang, 3) ?></td>
+                    <td>tinggi = <?= round($rv6_tinggi, 3) ?></td>
+                </tr>
+                <tr> <!-- Hapus -->
+                    <td>R+S</td>
+                    <td>rendah = <?= round($rs_rendah, 3) ?></td>
+                    <td>sedang = <?= round($rs_sedang, 3) ?></td>
+                    <td>tinggi = <?= round($rs_tinggi, 3) ?></td>
+                </tr> <!-- Hapus -->
+            </table>
+        </div>
+
+<!-- Detail Perhitungan Fuzifikasi -->
+<div id="detailFuzifikasi" class="is-hidden">
+<div class="formula-box formula-box-lg">
+    <h2>Detail Perhitungan Fuzifikasi - 8 Variabel Input</h2>
+
+    <table class="calculation-table">
+        <tr>
+            <th>Variabel</th>
+            <th>Fungsi Keanggotaan</th>
+            <th>Perhitungan</th>
+            <th>Hasil</th>
+        </tr>
+
+        <!-- 1. HEART RATE -->
+        <tr>
+            <td rowspan="3"><strong>1. Heart Rate</strong><br><?= $HR ?> bpm</td>
+            <td>pelanhr(x)</td>
+            <td>
+                <?php
+                if ($HR <= 60) {
+                    echo "x ≤ 60 = 1";
+                } elseif ($HR > 60 && $HR < 100) {
+                    echo "(100 - $HR) / (100 - 60) = " . (100 - $HR) . " / 40";
+                } else {
+                    echo "x ≥ 100 = 0";
+                }
+                ?>
+            </td>
+            <td><?= round($hr_pelan, 3) ?></td>
+        </tr>
+        <tr>
+            <td>sedanghr(x)</td>
+            <td>
+                <?php
+                if ($HR <= 70 || $HR >= 122) {
+                    echo "x ≤ 70 atau x ≥ 122 = 0";
+                } elseif ($HR > 70 && $HR < 100) {
+                    echo "($HR - 70) / (100 - 70) = " . ($HR - 70) . " / 30";
+                } elseif ($HR >= 100 && $HR < 122) {
+                    echo "(122 - $HR) / (122 - 100) = " . (122 - $HR) . " / 22";
+                } else {
+                    echo "= 0";
+                }
+                ?>
+            </td>
+            <td><?= round($hr_sedang, 3) ?></td>
+        </tr>
+        <tr>
+            <td>cepat(x)</td>
+            <td>
+                <?php
+                if ($HR <= 100) {
+                    echo "x ≤ 100 = 0";
+                } elseif ($HR > 100 && $HR < 163) {
+                    echo "($HR - 100) / (163 - 100) = " . ($HR - 100) . " / 63";
+                } else {
+                    echo "x ≥ 163 = 1";
+                }
+                ?>
+            </td>
+            <td><?= round($hr_cepat, 3) ?></td>
+        </tr>
+
+        <!-- 2. P-R INTERVAL -->
+        <tr>
+            <td rowspan="3"><strong>2. P-R Interval</strong><br><?= $PR ?> ms</td>
+            <td>rendahpr(x)</td>
+            <td>
+                <?php
+                if ($PR <= 60) {
+                    echo "x ≤ 60 = 1";
+                } elseif ($PR > 60 && $PR < 130) {
+                    echo "(130 - $PR) / (130 - 60) = " . (130 - $PR) . " / 70";
+                } else {
+                    echo "x ≥ 130 = 0";
+                }
+                ?>
+            </td>
+            <td><?= round($pr_rendah, 3) ?></td>
+        </tr>
+        <tr>
+            <td>sedangpr(x)</td>
+            <td>
+                <?php
+                if ($PR <= 120 || $PR >= 210) {
+                    echo "x ≤ 120 atau x ≥ 210 = 0";
+                } elseif ($PR > 120 && $PR < 130) {
+                    echo "($PR - 120) / (130 - 120) = " . ($PR - 120) . " / 10";
+                } elseif ($PR >= 130 && $PR < 210) {
+                    echo "(210 - $PR) / (210 - 130) = " . (210 - $PR) . " / 80";
+                } else {
+                    echo "= 0";
+                }
+                ?>
+            </td>
+            <td><?= round($pr_sedang, 3) ?></td>
+        </tr>
+        <tr>
+            <td>tinggipr(x)</td>
+            <td>
+                <?php
+                if ($PR <= 130) {
+                    echo "x ≤ 130 = 0";
+                } elseif ($PR > 130 && $PR < 266) {
+                    echo "($PR - 130) / (266 - 130) = " . ($PR - 130) . " / 136";
+                } else {
+                    echo "x ≥ 266 = 1";
+                }
+                ?>
+            </td>
+            <td><?= round($pr_tinggi, 3) ?></td>
+        </tr>
+
+        <!-- 3. QRS DURATION -->
+        <tr>
+            <td rowspan="3"><strong>3. QRS Duration</strong><br><?= $QRS ?> ms</td>
+            <td>pelanqrs(x)</td>
+            <td>
+                <?php
+                if ($QRS <= 50) {
+                    echo "x ≤ 50 = 1";
+                } elseif ($QRS > 50 && $QRS < 150) {
+                    echo "(150 - $QRS) / (150 - 50) = " . (150 - $QRS) . " / 100";
+                } else {
+                    echo "x ≥ 150 = 0";
+                }
+                ?>
+            </td>
+            <td><?= round($qrs_pelan, 3) ?></td>
+        </tr>
+        <tr>
+            <td>sedangqrs(x)</td>
+            <td>
+                <?php
+                if ($QRS <= 80 || $QRS >= 440) {
+                    echo "x ≤ 80 atau x ≥ 440 = 0";
+                } elseif ($QRS > 80 && $QRS < 150) {
+                    echo "($QRS - 80) / (150 - 80) = " . ($QRS - 80) . " / 70";
+                } elseif ($QRS >= 150 && $QRS < 440) {
+                    echo "(440 - $QRS) / (440 - 150) = " . (440 - $QRS) . " / 290";
+                } else {
+                    echo "= 0";
+                }
+                ?>
+            </td>
+            <td><?= round($qrs_sedang, 3) ?></td>
+        </tr>
+        <tr>
+            <td>cepatqrs(x)</td>
+            <td>
+                <?php
+                if ($QRS <= 150) {
+                    echo "x ≤ 150 = 0";
+                } elseif ($QRS > 150 && $QRS < 500) {
+                    echo "($QRS - 150) / (500 - 150) = " . ($QRS - 150) . " / 350";
+                } else {
+                    echo "x ≥ 500 = 1";
+                }
+                ?>
+            </td>
+            <td><?= round($qrs_cepat, 3) ?></td>
+        </tr>
+
+        <!-- 4. QT INTERVAL -->
+        <tr>
+            <td rowspan="3"><strong>4. QT Interval</strong><br><?= $QT ?> ms</td>
+            <td>rendahqt(x)</td>
+            <td>
+                <?php
+                if ($QT <= 200) {
+                    echo "x ≤ 200 = 1";
+                } elseif ($QT > 200 && $QT < 230) {
+                    echo "(230 - $QT) / (230 - 200) = " . (230 - $QT) . " / 30";
+                } else {
+                    echo "x ≥ 230 = 0";
+                }
+                ?>
+            </td>
+            <td><?= round($qt_rendah, 3) ?></td>
+        </tr>
+        <tr>
+            <td>sedangqt(x)</td>
+            <td>
+                <?php
+                if ($QT <= 210 || $QT >= 450) {
+                    echo "x ≤ 210 atau x ≥ 450 = 0";
+                } elseif ($QT > 210 && $QT < 230) {
+                    echo "($QT - 210) / (230 - 210) = " . ($QT - 210) . " / 20";
+                } elseif ($QT >= 230 && $QT < 450) {
+                    echo "(450 - $QT) / (450 - 230) = " . (450 - $QT) . " / 220";
+                } else {
+                    echo "= 0";
+                }
+                ?>
+            </td>
+            <td><?= round($qt_sedang, 3) ?></td>
+        </tr>
+        <tr>
+            <td>tinggiqt(x)</td>
+            <td>
+                <?php
+                if ($QT <= 230) {
+                    echo "x ≤ 230 = 0";
+                } elseif ($QT > 230 && $QT < 480) {
+                    echo "($QT - 230) / (480 - 230) = " . ($QT - 230) . " / 250";
+                } else {
+                    echo "x ≥ 480 = 1";
+                }
+                ?>
+            </td>
+            <td><?= round($qt_tinggi, 3) ?></td>
+        </tr>
+
+        <!-- 5. QTC INTERVAL -->
+        <tr>
+            <td rowspan="3"><strong>5. QTC Interval</strong><br><?= $QTC ?> ms</td>
+            <td>pelanqtc(x)</td>
+            <td>
+                <?php
+                if ($QTC <= 125) {
+                    echo "x ≤ 125 = 1";
+                } elseif ($QTC > 125 && $QTC < 285) {
+                    echo "(285 - $QTC) / (285 - 125) = " . (285 - $QTC) . " / 160";
+                } else {
+                    echo "x ≥ 285 = 0";
+                }
+                ?>
+            </td>
+            <td><?= round($qtc_pelan, 3) ?></td>
+        </tr>
+        <tr>
+            <td>sedangqtc(x)</td>
+            <td>
+                <?php
+                if ($QTC <= 185 || $QTC >= 495) {
+                    echo "x ≤ 185 atau x ≥ 495 = 0";
+                } elseif ($QTC > 185 && $QTC < 285) {
+                    echo "($QTC - 185) / (285 - 185) = " . ($QTC - 185) . " / 100";
+                } elseif ($QTC >= 285 && $QTC < 495) {
+                    echo "(495 - $QTC) / (495 - 285) = " . (495 - $QTC) . " / 210";
+                } else {
+                    echo "= 0";
+                }
+                ?>
+            </td>
+            <td><?= round($qtc_sedang, 3) ?></td>
+        </tr>
+        <tr>
+            <td>cepatqtc(x)</td>
+            <td>
+                <?php
+                if ($QTC <= 285) {
+                    echo "x ≤ 285 = 0";
+                } elseif ($QTC > 285 && $QTC < 500) {
+                    echo "($QTC - 285) / (500 - 285) = " . ($QTC - 285) . " / 215";
+                } else {
+                    echo "x ≥ 500 = 1";
+                }
+                ?>
+            </td>
+            <td><?= round($qtc_cepat, 3) ?></td>
+        </tr>
+
+        <!-- 6. AXIS -->
+        <tr>
+            <td rowspan="3"><strong>6. Axis</strong><br><?= $AXIS ?>°</td>
+            <td>rendahaxis(x)</td>
+            <td>
+                <?php
+                if ($AXIS <= -42) {
+                    echo "x ≤ -42 = 1";
+                } elseif ($AXIS > -42 && $AXIS < 210) {
+                    echo "(210 - $AXIS) / (210 - (-42)) = " . (210 - $AXIS) . " / 252";
+                } else {
+                    echo "x ≥ 210 = 0";
+                }
+                ?>
+            </td>
+            <td><?= round($axis_rendah, 3) ?></td>
+        </tr>
+        <tr>
+            <td>sedangaxis(x)</td>
+            <td>
+                <?php
+                if ($AXIS <= 130 || $AXIS >= 430) {
+                    echo "x ≤ 130 atau x ≥ 430 = 0";
+                } elseif ($AXIS > 130 && $AXIS < 210) {
+                    echo "($AXIS - 130) / (210 - 130) = " . ($AXIS - 130) . " / 80";
+                } elseif ($AXIS >= 210 && $AXIS < 430) {
+                    echo "(430 - $AXIS) / (430 - 210) = " . (430 - $AXIS) . " / 220";
+                } else {
+                    echo "= 0";
+                }
+                ?>
+            </td>
+            <td><?= round($axis_sedang, 3) ?></td>
+        </tr>
+        <tr>
+            <td>tinggiaxis(x)</td>
+            <td>
+                <?php
+                if ($AXIS <= 210) {
+                    echo "x ≤ 210 = 0";
+                } elseif ($AXIS > 210 && $AXIS < 450) {
+                    echo "($AXIS - 210) / (450 - 210) = " . ($AXIS - 210) . " / 240";
+                } else {
+                    echo "x ≥ 450 = 1";
+                }
+                ?>
+            </td>
+            <td><?= round($axis_tinggi, 3) ?></td>
+        </tr>
+
+        <!-- 7. RV6 -->
+        <tr>
+            <td rowspan="3"><strong>7. RV6</strong><br><?= $RV6 ?> mV</td>
+            <td>pelanrv6(x)</td>
+            <td>
+                <?php
+                if ($RV6 <= -1) {
+                    echo "x ≤ -1 = 1";
+                } elseif ($RV6 > -1 && $RV6 < 2.5) {
+                    echo "(2.5 - $RV6) / (2.5 - (-1)) = " . (2.5 - $RV6) . " / 3.5";
+                } else {
+                    echo "x ≥ 2.5 = 0";
+                }
+                ?>
+            </td>
+            <td><?= round($rv6_pelan, 3) ?></td>
+        </tr>
+        <tr>
+            <td>sedangrv6(x)</td>
+            <td>
+                <?php
+                if ($RV6 <= 1 || $RV6 >= 3) {
+                    echo "x ≤ 1 atau x ≥ 3 = 0";
+                } elseif ($RV6 > 1 && $RV6 < 2.5) {
+                    echo "($RV6 - 1) / (2.5 - 1) = " . ($RV6 - 1) . " / 1.5";
+                } elseif ($RV6 >= 2.5 && $RV6 < 3) {
+                    echo "(3 - $RV6) / (3 - 2.5) = " . (3 - $RV6) . " / 0.5";
+                } else {
+                    echo "= 0";
+                }
+                ?>
+            </td>
+            <td><?= round($rv6_sedang, 3) ?></td>
+        </tr>
+        <tr>
+            <td>tinggirv6(x)</td>
+            <td>
+                <?php
+                if ($RV6 <= 2.5) {
+                    echo "x ≤ 2.5 = 0";
+                } elseif ($RV6 > 2.5 && $RV6 < 4) {
+                    echo "($RV6 - 2.5) / (4 - 2.5) = " . ($RV6 - 2.5) . " / 1.5";
+                } else {
+                    echo "x ≥ 4 = 1";
+                }
+                ?>
+            </td>
+            <td><?= round($rv6_tinggi, 3) ?></td>
+        </tr>
+
+        <!-- 8. R+S --> <!-- Hapus -->
+        <tr>
+            <td rowspan="3"><strong>8. R+S</strong><br><?= $RS ?> mV</td>
+            <td>rendahrs(x)</td>
+            <td>
+                <?php
+                if ($RS <= 0.5) {
+                    echo "x ≤ 0.5 = 1";
+                } elseif ($RS > 0.5 && $RS < 4) {
+                    echo "(4 - $RS) / (4 - 0.5) = " . (4 - $RS) . " / 3.5";
+                } else {
+                    echo "x ≥ 4 = 0";
+                }
+                ?>
+            </td>
+            <td><?= round($rs_rendah, 3) ?></td>
+        </tr>
+        <tr>
+            <td>sedangrs(x)</td>
+            <td>
+                <?php
+                if ($RS <= 2 || $RS >= 50) {
+                    echo "x ≤ 2 atau x ≥ 50 = 0";
+                } elseif ($RS > 2 && $RS < 4) {
+                    echo "($RS - 2) / (4 - 2) = " . ($RS - 2) . " / 2";
+                } elseif ($RS >= 4 && $RS < 50) {
+                    echo "(50 - $RS) / (50 - 4) = " . (50 - $RS) . " / 46";
+                } else {
+                    echo "= 0";
+                }
+                ?>
+            </td>
+            <td><?= round($rs_sedang, 3) ?></td>
+        </tr>
+        <tr>
+            <td>tinggirs(x)</td>
+            <td>
+                <?php
+                if ($RS <= 4) {
+                    echo "x ≤ 4 = 0";
+                } elseif ($RS > 4 && $RS < 86) {
+                    echo "($RS - 4) / (86 - 4) = " . ($RS - 4) . " / 82";
+                } else {
+                    echo "x ≥ 86 = 1";
+                }
+                ?>
+            </td>
+            <td><?= round($rs_tinggi, 3) ?></td>
+        </tr> <!-- Hapus -->
+    </table>
+</div>
+</div>
+
+<!-- Inferensi Mamdani -->
+<div class="formula-box formula-box-lg">
+    <h2>Inferensi Mamdani - Conjunction (Λ)</h2>
+    <p>Total Rules: 256 (2⁸ = 256 kombinasi)</p>
+    <p><strong>Nilai Minimum per Kategori:</strong></p>
+
+    <table class="calculation-table">
+        <tr>
+            <th>Kategori</th>
+            <th>Jumlah Rules</th>
+            <th>Nilai Konjungsi</th>
+        </tr>
+        <tr>
+            <td class="text-green">Normal</td>
+            <td><?= count($normal_min_values) ?></td>
+            <td>
+                <?php
+                $unique_normal = array_unique($normal_min_values);
+                rsort($unique_normal);
+                $top_normal = array_slice($unique_normal, 0, 3);
+
+                if (!empty($top_normal)) {
+                    echo implode(', ', array_map(function($v) {
+                        return round($v, 3);
+                    }, $top_normal));
+                    if (count($unique_normal) > 3) echo ', ...';
+                } else {
+                    echo '0, 0, 0, ...';
+                }
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <td class="text-red">Abnormal</td>
+            <td><?= count($abnormal_min_values) ?></td>
+            <td>
+                <?php
+                $unique_abnormal = array_unique($abnormal_min_values);
+                rsort($unique_abnormal);
+                $top_abnormal = array_slice($unique_abnormal, 0, 3);
+
+                if (!empty($top_abnormal)) {
+                    echo implode(', ', array_map(function($v) {
+                        return round($v, 3);
+                    }, $top_abnormal));
+                    if (count($unique_abnormal) > 3) echo ', ...';
+                } else {
+                    echo '0, 0, 0, ...';
+                }
+                ?>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<!-- Disjunction - Tampil Unik -->
+<div class="formula-box formula-box-lg">
+    <h2>Disjunction (∨) - Maksimum</h2>
+
+    <div class="split-row">
+        <!-- Normal -->
+        <div class="split-card split-card--normal">
+            <h3>1. Normal</h3>
+            <div class="split-card__list">
+                <p>
+                    <?php
+                    $unique_normal = array_unique($normal_min_values);
+                    rsort($unique_normal);
+
+                    $count = 0;
+                    $displayed = [];
+                    foreach ($unique_normal as $value) {
+                        if ($value > 0) {
+                            $rounded = round($value, 3);
+                            if (!in_array($rounded, $displayed)) {
+                                if ($count > 0) echo "<br>∨ ";
+                                echo "Normal (" . $rounded . ")";
+                                $displayed[] = $rounded;
+                                $count++;
+                                if ($count >= 5) {
+                                    $remaining = count($unique_normal) - $count;
+                                    if ($remaining > 0) {
+                                        echo "<br>∨ ... (dan $remaining nilai lainnya)";
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if ($count == 0) {
+                        echo "Normal (0)";
+                    }
+                    ?>
+                </p>
+            </div>
+            <div class="split-card__summary">
+                <p class="split-card__max"><strong>Maksimum: <?= round($mu_normal, 3) ?></strong></p>
+                <p>Total Rules: <?= count($normal_min_values) ?></p>
+            </div>
+        </div>
+
+        <!-- Abnormal -->
+        <div class="split-card split-card--abnormal">
+            <h3>2. Abnormal</h3>
+            <div class="split-card__list">
+                <p>
+                    <?php
+                    $unique_abnormal = array_unique($abnormal_min_values);
+                    rsort($unique_abnormal);
+
+                    $count = 0;
+                    $displayed = [];
+                    foreach ($unique_abnormal as $value) {
+                        if ($value > 0) {
+                            $rounded = round($value, 3);
+                            if (!in_array($rounded, $displayed)) {
+                                if ($count > 0) echo "<br>∨ ";
+                                echo "Abnormal (" . $rounded . ")";
+                                $displayed[] = $rounded;
+                                $count++;
+                                if ($count >= 5) {
+                                    $remaining = count($unique_abnormal) - $count;
+                                    if ($remaining > 0) {
+                                        echo "<br>∨ ... (dan $remaining nilai lainnya)";
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if ($count == 0) {
+                        echo "Abnormal (0)<br>∨ Abnormal (0)<br>∨ ...";
+                    }
+                    ?>
+                </p>
+            </div>
+            <div class="split-card__summary">
+                <p class="split-card__max"><strong>Maksimum: <?= round($mu_abnormal, 3) ?></strong></p>
+                <p>Total Rules: <?= count($abnormal_min_values) ?></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Defuzzifikasi dengan Sampling Spesifik -->
+<div class="centroid-box">
+    <h2>Defuzzifikasi - Centroid Method</h2>
+    <div class="centroid-row">
+        <div class="centroid-card centroid-card--abnormal">
+            <h4>Abnormal (μ = <?= round($mu_abnormal, 3) ?>)</h4>
+            <p>Range: 30 - 44</p>
+            <p>Jumlah titik: <?= count($abnormal_samples) ?></p>
+            <p>Contoh: 30, 30.06, 30.12, ..., 44</p>
+        </div>
+
+        <div class="centroid-card centroid-card--normal">
+            <h4>Normal (μ = <?= round($mu_normal, 3) ?>)</h4>
+            <p>Range: 44 - 100</p>
+            <p>Jumlah titik: <?= count($normal_samples) ?></p>
+            <p>Contoh: 44, 45.6, 47.2, ..., 100</p>
+        </div>
+    </div>
+</div>
+
+<!-- Detail Perhitungan Defuzzifikasi - Centroid Method -->
+<div id="detailDefuzzifikasi" class="is-hidden">
+<div class="centroid-box">
+    <h2>Perhitungan Defuzzifikasi</h2>
+
+    <div class="formula-center">
+        <p class="formula-text">
+            <strong>Rumus:</strong> z* = Σ(xᵢ × μᵢ) / Σ μᵢ
+        </p>
+    </div>
+
+    <div class="calc-section">
+        <div class="calc-block calc-block--abnormal">
+            <h4>A. Abnormal (μ = <?= round($mu_abnormal, 3) ?>)</h4>
+            <p>∑xᵢ = <?= number_format(array_sum($abnormal_samples), 2) ?></p>
+            <p>∑(xᵢ × μᵢ) = <?= round($mu_abnormal, 3) ?> × <?= number_format(array_sum($abnormal_samples), 2) ?> = <strong><?= number_format($sum_x_mu_ab, 2) ?></strong></p>
+            <p>∑ μᵢ = <?= round($mu_abnormal, 3) ?> × <?= count($abnormal_samples) ?> = <strong><?= number_format($sum_mu_ab, 3) ?></strong></p>
+        </div>
+
+        <div class="calc-block calc-block--normal">
+            <h4>B. Normal (μ = <?= round($mu_normal, 3) ?>)</h4>
+            <p>∑xᵢ = <?= number_format(array_sum($normal_samples), 2) ?></p>
+            <p>∑(xᵢ × μᵢ) = <?= round($mu_normal, 3) ?> × <?= number_format(array_sum($normal_samples), 2) ?> = <strong><?= number_format($sum_x_mu_no, 2) ?></strong></p>
+            <p>∑ μᵢ = <?= round($mu_normal, 3) ?> × <?= count($normal_samples) ?> = <strong><?= number_format($sum_mu_no, 3) ?></strong></p>
+        </div>
+    </div>
+
+    <div class="calc-total">
+        <h4>Total:</h4>
+        <p>∑(xᵢ × μᵢ)<sub>total</sub> = <?= number_format($sum_x_mu_ab, 2) ?> + <?= number_format($sum_x_mu_no, 2) ?> = <strong><?= number_format($sum_x_mu, 2) ?></strong></p>
+        <p>∑ μᵢ<sub>total</sub> = <?= number_format($sum_mu_ab, 3) ?> + <?= number_format($sum_mu_no, 3) ?> = <strong><?= number_format($sum_mu, 3) ?></strong></p>
+    </div>
+
+    <div class="calc-result">
+        <p class="calc-result__formula">
+            z* = <?= number_format($sum_x_mu, 2) ?> / <?= number_format($sum_mu, 3) ?>
+        </p>
+        <p class="calc-result__value">
+            = <?= number_format($z_star, 2) ?>
+        </p>
+    </div>
+</div>
+</div>
+
+        <!-- Hasil Akhir -->
+        <div class="hasil-box">
+            <h2>Hasil Diagnosa</h2>
+            <table>
+                <tr>
+                    <th>Nilai Defuzzifikasi</th>
+                    <td class="hasil-value"><?= number_format($z_star, 2) ?></td>
+                </tr>
+                <tr>
+                    <th>Batasan</th>
+                    <td class="hasil-value">44</td>
+                </tr>
+                <tr>
+                    <th>Hasil Diagnosa</th>
+                    <td class="hasil-value--main <?= $hasil == 'Normal' ? 'hasil-normal' : 'hasil-abnormal'; ?>">
+                        <?= $hasil ?>
+                        <?php if ($hasil == 'Normal'): ?>
+                             <?= number_format($z_star, 2) ?> &gt; 44
+                        <?php else: ?>
+                             <?= number_format($z_star, 2) ?> ≤ 44
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+<div class="action-bar">
+    <!-- Tombol kiri -->
+    <a href="Riwayat.php" class="btn">Riwayat Diagnosa</a>
+
+    <!-- Tombol kanan -->
+    <div class="action-group">
+        <a onclick="toggleSection('detailFuzifikasi')" class="btn">Detail Fuzifikasi</a>
+        <a onclick="toggleSection('detailDefuzzifikasi')" class="btn">Detail Defuzzifikasi</a>
+        <a onclick="toggleSection('rules256Table')" class="btn">Aturan Rule</a>
+        <a onclick="toggleSection('rulesTable')" class="btn">Min-Max</a>
+        <a onclick="window.print()" class="btn btn-print">🖨️ Print</a>
+    </div>
+</div>
+    </div>
+
+    <div class="container">
+<!-- Tabel Aturan Linguistik 256 Rules -->
+<div id="rules256Table" class="toggle-section is-hidden">
+    <h2 class="text-black">Aturan Linguistik Fuzzy (<?= pow(2, 8) ?> Rules)</h2>
+
+    <div class="rules-scroll">
+        <table class="rules-table rules-table--roomy">
+            <tr class="rules-head">
+                <th class="col-no">No</th>
+                <th class="col-rule">Aturan IF-THEN</th>
+                <th class="col-output">Output</th>
+            </tr>
+            <?php
+            $HRs   = ['pelan', 'sedang'];
+            $PRs   = ['rendah', 'sedang'];
+            $QRSs  = ['pelan', 'sedang'];
+            $QTs   = ['rendah', 'sedang'];
+            $QTCs  = ['pelan', 'sedang'];
+            $AXISs = ['rendah', 'sedang'];
+            $RV6s  = ['pelan', 'sedang'];
+            $RSs   = ['rendah', 'sedang']; // Hapus
+
+            function tentukan_output($hr, $pr, $qrs, $qt, $qtc, $axis, $rv6, $rs) // Hapus salah satu
+            {
+                $indikator_normal = 0;
+                if ($hr == 'sedang') $indikator_normal++;
+                if ($pr == 'sedang') $indikator_normal++;
+                if ($qrs == 'sedang') $indikator_normal++;
+                if ($qt == 'sedang') $indikator_normal++;
+                if ($qtc == 'sedang') $indikator_normal++;
+                if ($axis == 'sedang') $indikator_normal++;
+                if ($rv6 == 'sedang') $indikator_normal++;
+                if ($rs == 'sedang') $indikator_normal++; // Hapus
+
+                return ($indikator_normal >= 6) ? 'NORMAL' : 'ABNORMAL';
+            }
+
+            $no = 1;
+            foreach ($HRs as $hr) {
+                foreach ($PRs as $pr) {
+                    foreach ($QRSs as $qrs) {
+                        foreach ($QTs as $qt) {
+                            foreach ($QTCs as $qtc) {
+                                foreach ($AXISs as $axis) {
+                                    foreach ($RV6s as $rv6) {
+                                        foreach ($RSs as $rs) { // Hapus
+                                            $output = tentukan_output($hr, $pr, $qrs, $qt, $qtc, $axis, $rv6, $rs); // Hapus salah satu
+                                            $color_class = ($output == 'NORMAL') ? 'text-green' : 'text-red';
+                                            $row_class = ($no % 2 == 0) ? 'row-even' : 'row-odd';
+
+                                            echo "<tr class='{$row_class}'>";
+                                            echo "<td class='cell-center'>{$no}</td>";
+                                            echo "<td>IF HR = <strong>{$hr}</strong> DAN PR = <strong>{$pr}</strong> DAN QRS = <strong>{$qrs}</strong> DAN QT = <strong>{$qt}</strong> DAN QTC = <strong>{$qtc}</strong> DAN AXIS = <strong>{$axis}</strong> DAN RV6 = <strong>{$rv6}</strong> DAN R+S = <strong>{$rs}</strong></td>";
+                                            echo "<td class='cell-center cell-bold {$color_class}'>" . $output . "</td>";
+                                            echo "</tr>";
+                                            $no++;
+                                        } // Hapus satu kurung
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            ?>
+        </table>
+    </div>
+</div>
+
+        <!-- Tabel Min/Max Konjungsi - 256 Aturan Lengkap -->
+        <div id="rulesTable" class="toggle-section is-hidden">
+            <h2 class="text-black">Nilai Minimum dan Maximum - 256 Aturan Linguistik Lengkap</h2>
+
+            <p class="text-black">Dengan menggunakan metode inferensi Mamdani yang memperoleh aturan Conjuction (Λ) untuk mengambil nilai atau derajat keanggotaan minimum dari nilai-nilai linguistik yang dilubungkan untuk menentukan kelainan jantung, sehingga diperoleh:</p>
+            <div class="rules-scroll">
+                <table class="rules-table">
+                    <tr class="rules-head">
+                        <th class="col-no">No</th>
+                        <th class="col-premis">Kondisi (Premis)</th>
+                        <th class="col-min">Min(Λ)</th>
+                        <th class="col-output">Output</th>
+                    </tr>
+                    <?php
+                    $states_display = [
+                        'hr' => ['pelan' => $hr_pelan, 'sedang' => $hr_sedang],
+                        'pr' => ['rendah' => $pr_rendah, 'sedang' => $pr_sedang],
+                        'qrs' => ['pelan' => $qrs_pelan, 'sedang' => $qrs_sedang],
+                        'qt' => ['rendah' => $qt_rendah, 'sedang' => $qt_sedang],
+                        'qtc' => ['pelan' => $qtc_pelan, 'sedang' => $qtc_sedang],
+                        'axis' => ['rendah' => $axis_rendah, 'sedang' => $axis_sedang],
+                        'rv6' => ['pelan' => $rv6_pelan, 'sedang' => $rv6_sedang],
+                        'rs' => ['rendah' => $rs_rendah, 'sedang' => $rs_sedang] // Hapus
+                    ];
+
+                    $rule_number = 1;
+                    $total_rules = 0;
+
+                    // Loop untuk semua kombinasi 256 rules
+                    foreach ($states_display['hr'] as $hr_state => $hr_val) {
+                        foreach ($states_display['pr'] as $pr_state => $pr_val) {
+                            foreach ($states_display['qrs'] as $qrs_state => $qrs_val) {
+                                foreach ($states_display['qt'] as $qt_state => $qt_val) {
+                                    foreach ($states_display['qtc'] as $qtc_state => $qtc_val) {
+                                        foreach ($states_display['axis'] as $axis_state => $axis_val) {
+                                            foreach ($states_display['rv6'] as $rv6_state => $rv6_val) {
+                                                foreach ($states_display['rs'] as $rs_state => $rs_val) { // Hapus
+
+                                                    $total_rules++;
+
+                                                    // Hitung nilai minimum (konjungsi Λ)
+                                                    $min_value = min(
+                                                        $hr_val, $pr_val, $qrs_val, $qt_val,
+                                                        $qtc_val, $axis_val, $rv6_val, $rs_val // Hapus salah satu
+                                                    );
+
+                                                    // Tentukan output berdasarkan kriteria
+                                                    $sedang_count = 0;
+                                                    if ($hr_state == 'sedang') $sedang_count++;
+                                                    if ($pr_state == 'sedang') $sedang_count++;
+                                                    if ($qrs_state == 'sedang') $sedang_count++;
+                                                    if ($qt_state == 'sedang') $sedang_count++;
+                                                    if ($qtc_state == 'sedang') $sedang_count++;
+                                                    if ($axis_state == 'sedang') $sedang_count++;
+                                                    if ($rv6_state == 'sedang') $sedang_count++;
+                                                    if ($rs_state == 'sedang') $sedang_count++; // Hapus
+                                                    $output = ($sedang_count >= 6) ? 'NORMAL' : 'ABNORMAL';
+
+                                                    // Format kondisi yang lebih ringkas
+                                                    $conditions = "HR:{$hr_state}(" . round($hr_val, 3) . ") ";
+                                                    $conditions .= "PR:{$pr_state}(" . round($pr_val, 3) . ") ";
+                                                    $conditions .= "QRS:{$qrs_state}(" . round($qrs_val, 3) . ") ";
+                                                    $conditions .= "QT:{$qt_state}(" . round($qt_val, 3) . ") ";
+                                                    $conditions .= "QTC:{$qtc_state}(" . round($qtc_val, 3) . ") ";
+                                                    $conditions .= "AXIS:{$axis_state}(" . round($axis_val, 3) . ") ";
+                                                    $conditions .= "RV6:{$rv6_state}(" . round($rv6_val, 3) . ") ";
+                                                    $conditions .= "RS:{$rs_state}(" . round($rs_val, 3) . ")"; // Hapus
+
+                                                    $color_class = ($output == 'NORMAL') ? 'text-green' : 'text-red';
+                                                    $row_class = ($rule_number % 2 == 0) ? 'row-even' : 'row-odd';
+
+                                                    echo "<tr class='{$row_class}'>";
+                                                    echo "<td class='cell-center'>{$rule_number}</td>";
+                                                    echo "<td>{$conditions}</td>";
+                                                    echo "<td class='cell-center cell-bold {$color_class}'>" . round($min_value, 3) . "</td>";
+                                                    echo "<td class='cell-center {$color_class}'>" . $output . "</td>";
+                                                    echo "</tr>";
+
+                                                    $rule_number++;
+                                                } // Hapus satu kurung
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    ?>
+                </table>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // Satu fungsi untuk semua tombol toggle
+    function toggleSection(id) {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('is-hidden');
+    }
+</script>
+</body>
+</html>

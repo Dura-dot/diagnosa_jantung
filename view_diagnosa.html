@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Diagnosa</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="user-bar">
+            
+        </div>
+        <h1>Diagnosa</h1>
+        <p class="text-black">Pilih pasien, lalu tekan tombol Hasil Diagnosa untuk melihat diagnosa fuzzy logic.</p>
+
+        <div class="table-wrap">
+        <table class="tabel-diagnosa">
+            <tr>
+                <th>No</th>
+                <th>Nama Pasien</th>
+                <th>Usia</th>
+                <th>Jenis Kelamin</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+            
+                    <tr>
+                        <td class="text-black"><?= $no++ ?></td>
+                        <td class="text-black"><?= htmlspecialchars($row['nama']) ?></td>
+                        <td class="text-black"><?= htmlspecialchars($row['usia']) ?></td>
+                        <td class="text-black"><?= htmlspecialchars($row['jenis_kelamin']) ?></td>
+                        
+                        <td><span class="badge <?= $badge ?>"><?= htmlspecialchars($status) ?></span></td>
+                        <td>
+                            <a href="hasil_diagnosa.html" class="btn">Hasil Diagnosa</a>
+                        </td>
+                    </tr>
+                
+                <tr>
+                    <td colspan="6" class="text-black cell-center">Belum ada data pasien.</td>
+                </tr>
+            
+        </table>
+        </div>
+
+        <div class="action-bar">
+            <a href="index.html" class="btn">Home</a>
+            <a href="riwayat.html" class="btn">Riwayat Diagnosa</a>
+        </div>
+    </div>
+</body>
+</html>

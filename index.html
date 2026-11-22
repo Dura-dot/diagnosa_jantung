@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Sistem diagnosa kelainan jantung berbasis Fuzzy Logic metode Mamdani dengan defuzzifikasi centroid.">
+    <title>CardioFuzzy - Diagnosa Kelainan Jantung dengan Fuzzy Mamdani</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="home">
+
+    <!-- ===================== NAVIGATION BAR ===================== -->
+    <nav class="navbar">
+        <div class="inner nav-inner">
+            <a href="#beranda" class="nav-brand">
+                <span class="nav-logo">❤️</span>
+                <span>CardioFuzzy</span>
+            </a>
+
+            <button class="nav-toggle" id="navToggle" aria-label="Buka menu" aria-expanded="false">☰</button>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#beranda">Beranda</a></li>
+                <li><a href="#masalah">Masalah</a></li>
+                <li><a href="#tentang">Tentang</a></li>
+                <li><a href="#fitur">Fitur</a></li>
+                <li><a href="#masuk" class="btn nav-cta">Masuk</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ===================== HERO SECTION ===================== -->
+    <header class="home-hero" id="beranda">
+        <div class="inner hero-grid">
+            <div class="hero-text">
+                <span class="hero-badge">❤️ Sistem Pakar Berbasis Fuzzy Logic</span>
+                <h1>Diagnosa Kelainan Jantung <span class="text-gradient">Lebih Cepat dan Transparan</span></h1>
+                <p class="hero-sub">
+                    Analisis data EKG pasien dengan metode Fuzzy Mamdani. Setiap langkah, mulai dari
+                    fuzifikasi sampai defuzzifikasi, dapat ditelusuri dan diperiksa.
+                </p>
+                <div class="hero-actions">
+                    <a href="#masuk" class="btn btn-lg">Mulai Diagnosa</a>
+                    <a href="#tentang" class="btn btn-lg btn-outline">Pelajari Sistem</a>
+                </div>
+                <div class="chips chips-left">
+                    <span class="chip">Fuzifikasi</span>
+                    <span class="chip">Inferensi Mamdani</span>
+                    <span class="chip">Defuzzifikasi Centroid</span>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="ecg-card">
+                    <div class="ecg-head">
+                        <span class="ecg-dot"></span>
+                        <span>Pemantauan EKG</span>
+                        <span class="ecg-tag">Ilustrasi</span>
+                    </div>
+                    <svg class="ecg-svg" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ilustrasi gelombang EKG">
+                        <path class="ecg-grid" d="M0 20H400M0 40H400M0 60H400M0 80H400M0 100H400M50 0V120M100 0V120M150 0V120M200 0V120M250 0V120M300 0V120M350 0V120" />
+                        <path class="ecg-line" d="M0 60H60L70 60L80 50L90 60H120L130 70L145 10L160 100L172 60H220L235 45L250 60H400" />
+                    </svg>
+                    <div class="ecg-result">
+                        <span>Hasil Diagnosa</span>
+                        <span class="badge badge-normal">Normal</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===================== PROBLEM SECTION ===================== -->
+    <section class="section" id="masalah">
+        <div class="inner">
+            <div class="section-head">
+                <span class="section-label">Permasalahan</span>
+                <h2>Membaca Data EKG Tidak Selalu Mudah</h2>
+                <p>Nilai pengukuran EKG sering berada di batas antara normal dan tidak normal, sehingga keputusan "ya atau tidak" saja kurang menggambarkan kondisi sebenarnya.</p>
+            </div>
+
+            <div class="card-grid">
+                <div class="info-card">
+                    <span class="info-icon">⏱️</span>
+                    <h3>Memakan Waktu</h3>
+                    <p>Memeriksa banyak parameter EKG satu per satu secara manual membutuhkan waktu dan ketelitian tinggi.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-icon">⚖️</span>
+                    <h3>Batas yang Samar</h3>
+                    <p>Nilai di sekitar batas normal sulit dikategorikan tegas, padahal kondisi pasien bisa berada di antaranya.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-icon">🔍</span>
+                    <h3>Sulit Ditelusuri</h3>
+                    <p>Tanpa catatan perhitungan yang jelas, alasan di balik suatu hasil diagnosa sulit diperiksa kembali.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== ABOUT SECTION ===================== -->
+    <section class="section section-alt" id="tentang">
+        <div class="inner about-grid">
+            <div class="about-text">
+                <span class="section-label">Tentang Sistem</span>
+                <h2>Fuzzy Logic untuk Menangani Nilai yang "Abu-abu"</h2>
+                <p>
+                    CardioFuzzy memakai logika fuzzy dengan metode Mamdani. Alih-alih membagi data
+                    menjadi normal atau tidak normal secara kaku, sistem menghitung derajat keanggotaan
+                    tiap parameter EKG, menggabungkannya lewat aturan linguistik, lalu menghasilkan
+                    satu nilai akhir yang dibandingkan dengan batas diagnosa.
+                </p>
+                <p>
+                    Seluruh tahapan ditampilkan dalam bentuk rumus dan angka, sehingga hasilnya dapat
+                    dipelajari dan diperiksa, bukan sekadar keluaran "kotak hitam".
+                </p>
+            </div>
+
+            <ol class="steps">
+                <li class="step">
+                    <span class="step-no">1</span>
+                    <div><h4>Input Data Pasien</h4><p>Parameter EKG pasien dimasukkan ke sistem.</p></div>
+                </li>
+                <li class="step">
+                    <span class="step-no">2</span>
+                    <div><h4>Fuzifikasi</h4><p>Nilai diubah menjadi derajat keanggotaan.</p></div>
+                </li>
+                <li class="step">
+                    <span class="step-no">3</span>
+                    <div><h4>Inferensi Mamdani</h4><p>Aturan linguistik diproses dengan operator min dan max.</p></div>
+                </li>
+                <li class="step">
+                    <span class="step-no">4</span>
+                    <div><h4>Defuzzifikasi Centroid</h4><p>Hasil fuzzy diubah menjadi satu nilai tegas.</p></div>
+                </li>
+                <li class="step">
+                    <span class="step-no">5</span>
+                    <div><h4>Hasil Diagnosa</h4><p>Nilai dibandingkan batas untuk menentukan Normal atau Abnormal.</p></div>
+                </li>
+            </ol>
+        </div>
+    </section>
+
+    <!-- ===================== MAIN FEATURE SECTION ===================== -->
+    <section class="section" id="fitur">
+        <div class="inner">
+            <div class="section-head">
+                <span class="section-label">Fitur Utama</span>
+                <h2>Semua yang Dibutuhkan untuk Diagnosa yang Terukur</h2>
+                <p>Dirancang agar proses diagnosa mudah dijalankan sekaligus mudah diperiksa.</p>
+            </div>
+
+            <div class="card-grid card-grid-3">
+                <div class="feature-card">
+                    <span class="info-icon">📊</span>
+                    <h3>Fuzifikasi Otomatis</h3>
+                    <p>Derajat keanggotaan setiap parameter EKG dihitung otomatis dari data pasien.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="info-icon">🧠</span>
+                    <h3>Inferensi Mamdani</h3>
+                    <p>Aturan linguistik lengkap diproses dengan konjungsi (min) dan disjungsi (max).</p>
+                </div>
+                <div class="feature-card">
+                    <span class="info-icon">🎯</span>
+                    <h3>Defuzzifikasi Centroid</h3>
+                    <p>Nilai akhir diperoleh dengan metode centroid dan dibandingkan dengan batas diagnosa.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="info-icon">🧮</span>
+                    <h3>Detail Perhitungan</h3>
+                    <p>Tampilkan rumus dan angka tiap tahap, plus tabel aturan, kapan pun dibutuhkan.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="info-icon">🗂️</span>
+                    <h3>Riwayat Diagnosa</h3>
+                    <p>Lihat kembali hasil pasien, cari berdasarkan nama, dan saring berdasarkan status.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="info-icon">🔐</span>
+                    <h3>Akses dengan Login</h3>
+                    <p>Halaman diagnosa hanya dapat dibuka setelah masuk sebagai Dokter atau Admin.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== CALL TO ACTION SECTION ===================== -->
+    <section class="cta" id="masuk">
+        <div class="inner">
+            <div class="section-head section-head-light">
+                <h2>Siap Memulai Diagnosa?</h2>
+                <p>Pilih peran Anda untuk masuk ke sistem.</p>
+            </div>
+
+            <div class="role-grid cta-roles">
+                <a href="login.html" class="role-card">
+                    <span class="role-icon">🩺</span>
+                    <h3>Dokter</h3>
+                    <p>Lihat data pasien dan hasil diagnosa fuzzy beserta detail perhitungannya.</p>
+                    <span class="role-action">Login Dokter →</span>
+                </a>
+
+                <a href="login.html" class="role-card">
+                    <span class="role-icon">🛠️</span>
+                    <h3>Admin</h3>
+                    <p>Kelola data pasien dan pantau seluruh proses diagnosa dalam sistem.</p>
+                    <span class="role-action">Login Admin →</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== FOOTER SECTION ===================== -->
+    <footer class="site-footer">
+        <div class="inner footer-grid">
+            <div class="footer-brand">
+                <a href="#beranda" class="nav-brand footer-logo">
+                    <span class="nav-logo">❤️</span>
+                    <span>CardioFuzzy</span>
+                </a>
+                <p>Sistem diagnosa kelainan jantung berbasis Fuzzy Logic metode Mamdani.</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Navigasi</h4>
+                <ul>
+                    <li><a href="#beranda">Beranda</a></li>
+                    <li><a href="#masalah">Masalah</a></li>
+                    <li><a href="#tentang">Tentang</a></li>
+                    <li><a href="#fitur">Fitur</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Akses</h4>
+                <ul>
+                    <li><a href="login.html">Login Dokter</a></li>
+                    <li><a href="login.html">Login Admin</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="inner footer-bottom">
+            <p>Hasil diagnosa merupakan alat bantu dan tidak menggantikan penilaian tenaga medis.</p>
+            <p>&copy; 2026 CardioFuzzy. Seluruh hak cipta dilindungi.</p>
+        </div>
+    </footer>
+
+<script>
+    // Menu mobile
+    const toggle = document.getElementById('navToggle');
+    const links = document.getElementById('navLinks');
+    toggle.addEventListener('click', function () {
+        const open = links.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', open);
+    });
+    links.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () {
+            links.classList.remove('open');
+            toggle.setAttribute('aria-expanded', false);
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Riwayat Diagnosa</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="user-bar">
+            <span>Masuk sebagai <strong><?= htmlspecialchars($_SESSION['user']) ?></strong> (<?= htmlspecialchars($_SESSION['role']) ?>)</span>
+            <a href="logout.php" class="btn btn-logout">Keluar</a>
+        </div>
+
+        <h1>Riwayat Diagnosa</h1>
+
+        <!-- Ringkasan -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value"><?= $total ?></div>
+                <div class="stat-label">Total Diagnosa</div>
+            </div>
+            <div class="stat-card stat-card--normal">
+                <div class="stat-value"><?= $total_normal ?></div>
+                <div class="stat-label">Normal</div>
+            </div>
+            <div class="stat-card stat-card--abnormal">
+                <div class="stat-value"><?= $total_abnormal ?></div>
+                <div class="stat-label">Abnormal</div>
+            </div>
+        </div>
+
+        <!-- Pencarian & filter -->
+        <div class="toolbar">
+            <input type="text" id="cari" class="search-input" placeholder="Cari nama pasien...">
+            <select id="filterStatus" class="filter-select">
+                <option value="">Semua Status</option>
+                <option value="normal">Normal</option>
+                <option value="abnormal">Abnormal</option>
+            </select>
+        </div>
+
+        <div class="table-wrap">
+            <table class="tabel-diagnosa" id="tabelRiwayat">
+                <tr>
+                    <th>No</th>
+                    <th>Nama Pasien</th>
+                    <th>Usia</th>
+                    <th>Jenis Kelamin</th>
+                    <th>Nilai Defuzzifikasi</th>
+                    <th>Hasil</th>
+                    <th>Aksi</th>
+                </tr>
+                
+                    <tr class="data-row"
+                        data-nama="<?= htmlspecialchars(strtolower($row['nama'])) ?>"
+                        data-status="<?= htmlspecialchars(strtolower($row['hasil_diagnosa'])) ?>">
+                        <td class="text-black"><?= $no++ ?></td>
+                        <td class="text-black"><?= htmlspecialchars($row['nama']) ?></td>
+                        <td class="text-black"><?= htmlspecialchars($row['usia']) ?></td>
+                        <td class="text-black"><?= htmlspecialchars($row['jenis_kelamin']) ?></td>
+                        <td class="text-black"><?= number_format((float)$row['nilai_defuzzifikasi'], 2) ?></td>
+                        <td><span class="badge <?= $badge ?>"><?= htmlspecialchars($row['hasil_diagnosa']) ?></span></td>
+                        <td>
+                            <a href="<?= $halaman_hasil ?>?id=<?= urlencode($row['id']) ?>" class="btn">Lihat Detail</a>
+                        </td>
+                    </tr>
+                
+                <tr id="barisKosong" class="<?= $total > 0 ? 'is-hidden' : '' ?>">
+                    <td colspan="7" class="text-black cell-center">
+                        <?= $total > 0 ? 'Tidak ada data yang cocok.' : 'Belum ada riwayat diagnosa.' ?>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="action-bar">
+            <a href="view_diagnosa.html" class="btn">Kembali ke Diagnosa</a>
+        </div>
+    </div>
+
+<script>
+    const cari = document.getElementById('cari');
+    const filterStatus = document.getElementById('filterStatus');
+    const baris = document.querySelectorAll('.data-row');
+    const kosong = document.getElementById('barisKosong');
+
+    function terapkanFilter() {
+        const kata = cari.value.trim().toLowerCase();
+        const status = filterStatus.value;
+        let tampil = 0;
+
+        baris.forEach(function (tr) {
+            const cocok = tr.dataset.nama.includes(kata) &&
+                          (status === '' || tr.dataset.status === status);
+            tr.classList.toggle('is-hidden', !cocok);
+            if (cocok) tampil++;
+        });
+
+        if (baris.length > 0) kosong.classList.toggle('is-hidden', tampil > 0);
+    }
+
+    cari.addEventListener('input', terapkanFilter);
+    filterStatus.addEventListener('change', terapkanFilter);
+</script>
+</body>
+</html>
